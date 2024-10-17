@@ -148,7 +148,7 @@ export const AppDrawer = ()=>{
   }
 
   const refreshSession = ()=>{
-    apiClient.post('/session/refresh');
+    apiClient.post('/api/conversation/refresh');
   }
 
     return(

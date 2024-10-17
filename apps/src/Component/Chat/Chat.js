@@ -77,9 +77,10 @@ export const Chat = ()=>{
 
     const chatCall = async()=>{
         const payload = {
-            "question": messageTextarea
+            "message": messageTextarea,
+            "converseid":"112"
         }
-        const response = await apiClient.post('/talktome', payload);
+        const response = await apiClient.post('/api/search/chat', payload);
         return response.data
     }
 

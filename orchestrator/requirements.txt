@@ -1,0 +1,5 @@
+fastapi[all]
+openai
+tenacity
+google-cloud-datastore
+python-dotenv
