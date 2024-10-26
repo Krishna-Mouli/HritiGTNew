@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import jane from '../../Assets/Images/Jane.png';
+import {  useSelector } from 'react-redux';
 
 export const ProfileDropdown = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
+  const user = useSelector((state) => state.userContext.user);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -28,14 +29,18 @@ export const ProfileDropdown = () => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <img 
-            src={jane}
-            alt="Profile"
-            style={{ width: 55, height: 55, borderRadius: '50%' }} // Adjust size as needed
-          />
+        <img 
+          src={user?.picture}
+          alt="Profile"
+          style={{
+            width: '55px',
+            height: '55px', 
+            borderRadius: '50%'
+          }}
+        />
         </IconButton>
-        <Typography variant="h6" sx={{ marginRight: '10px', fontWeight: 'bold', fontFamily:'monospace, Courier New, Courier' }}>
-          Welcome, Jane Doe
+        <Typography variant="h6" sx={{color:'white', marginRight: '10px', fontWeight: 'bold', fontFamily:'monospace, Courier New, Courier' }}>
+          Welcome,{user.name}
         </Typography> 
         <Menu
           id="profile-menu"

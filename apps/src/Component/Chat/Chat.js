@@ -7,6 +7,9 @@ import { InitialScreen } from "./InitialScreen/InitialScreen";
 import useApiClient from "../../Core/Auth/UseApiClient";
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessages } from "../../Core/Store/AppSlice";
+import { FaPlus } from "react-icons/fa";
+import { AiOutlinePlus } from "react-icons/ai";
+import {Button, VisuallyHiddenInput} from "@mui/material";
 
 const dummyData = [
     {
@@ -83,11 +86,19 @@ export const Chat = ()=>{
         const response = await apiClient.post('/api/search/chat', payload);
         return response.data
     }
+    const handleDocUpload = () =>{
+
+    }
+
+    const uploadDoc = async()=>{
+        const payload = {}
+        
+    }
 
 
     return(
-        <Box style={{display:'flex', flexDirection:'column', height:'100vh', width:'100%'}}>
-            <Box style={{height:'85%', paddingInline:'20%', paddingTop:'50px', overflow:'auto'}}>
+        <Box style={{display:'flex', flexDirection:'column', height:'100vh', width:'100%' , color:'white' , backgroundColor:'black'}}>
+            <Box style={{height:'85%', paddingInline:'20%', paddingTop:'50px', overflow:'auto' ,color:'white' , backgroundColor:'black'}}>
                 {
                     messages.length <= 0 
                     ?
@@ -118,6 +129,22 @@ export const Chat = ()=>{
                     </Typography> 
                 </Box> 
                 <Box className="userInputTextarea" style={{ width: '100%', backgroundColor: '#191b1c', borderRadius:'20px', paddingInline:'10px', display:'flex', flexDirection:'row', alignItems:'center' , padding:'10px'}}>
+                <Box>
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="text"
+                        tabIndex={-1}
+                        startIcon={<FaPlus />}
+                        >
+                        <input
+                            type="file"
+                            onChange={(event) => console.log(event.target.files)}
+                            style={{display:'none'}}
+                            multiple
+                        />
+                    </Button>
+                </Box>
                 <TextareaAutosize
                 value={messageTextarea}
                 onChange={(event)=>setMessageTextarea(event.target.value)}
