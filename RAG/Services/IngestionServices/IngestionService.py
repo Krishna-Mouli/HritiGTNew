@@ -50,7 +50,6 @@ class Ingestion:
         for chunk in chunks:
             task = self._openai_service.EmbeddingsOpenAI(text=chunk)
             embedding_tasks.append(task)
-
         vectors = await asyncio.gather(*embedding_tasks)       
         return [{
             "id": str(uuid.uuid4()),

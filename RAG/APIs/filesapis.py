@@ -25,7 +25,7 @@ async def ingest_index_files(app_id: str, files: List[UploadFile] = File(...)) :
             raise HTTPException(status_code=400, detail=f"File {file.filename} exceeds the size limit. Keep it under 5Mb")
         file_contents.append((content, file.filename, file))        
     _ingestion = Ingestion()
-    tasks = [_ingestion.Upload_and_Vectorize(file_bytes = content, app_id=app_id, filename=filename, file = file)
+    tasks = [_ingestion.Upload_and_Vectorize(file_bytes = content, app_id = app_id, filename=filename, file = file)
          for content, filename, file in file_contents]
     results = await asyncio.gather(*tasks)
     return JSONResponse(
