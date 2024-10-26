@@ -7,7 +7,7 @@ class Chunking:
     def __init__(self):
         self._compl_context_max_tokens = 500
 
-    def chunk(self, content: str) -> List[str]:
+    def split_text(self, content: str) -> List[str]:
         """ This function splits the content into segments uses conventional logic"""
         content_segments = []
         tokens = self.num_tokens_from_string(content,None) #you can add your encoding type in place of None if need or by default it uses the cl100k_base encoding

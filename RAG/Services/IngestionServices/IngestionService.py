@@ -2,8 +2,8 @@ from fastapi import UploadFile
 from ..GoogleCloudServices import GCPStorageServiceClient
 from ..AIServices import OpenAIServices
 from ..VectorStoreServices import PineConeService
-from Utils import Extractor, get_chunks
-from Data import Chunkers
+from Utils import get_extractor, get_chunks
+from Data import Chunkers, Extractors
 
 from typing import List
 import asyncio
@@ -17,7 +17,7 @@ class Ingestion:
         self._pinecone_service = PineConeService()
 
     async def Upload_and_Vectorize(self, file_bytes: bytes, app_id: str, filename: str, file: UploadFile):
-        #uploading file to google cloud service
+        # uploading file to google cloud service
         try:
             public_url = await self._gcp_storage_service.add_files(app_id = app_id, filename = filename, file = file)
         except Exception as e:
@@ -25,11 +25,13 @@ class Ingestion:
         
         #calling azrre form recognition service
         try:
-            content = Extractor().extract(file_bytes)
+            content = await get_extractor(extractor_logic=Extractors.AZURE_FORM_RECOGNIZER, file_bytes=file_bytes)
+            print(content)
         except Exception as e:
             return {"file":filename, "status": "failed at extracting content", "error": str(e)}
 
-        chunks = get_chunks(chunking_logic = Chunkers.BASIC_CHUNKER, content = content)
+        chunks = get_chunks(chunking_logic = Chunkers.FIXED_TOKEN_CHUNKER, content = content)
+        print(chunks)
 
         try:
             vectors = await self.process_chunks(chunks = chunks, filename = filename, app_id = app_id, public_url = public_url)
