@@ -3,11 +3,13 @@ import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import jane from '../../Assets/Images/Jane.png';
 import {  useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export const ProfileDropdown = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const user = useSelector((state) => state.userContext.user);
+  const navigate = useNavigate()
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -15,6 +17,10 @@ export const ProfileDropdown = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const logout = () =>{
+    localStorage.removeItem('token')
+    navigate('/login')
+  }
 
   return (
     <Box>        
@@ -56,7 +62,7 @@ export const ProfileDropdown = () => {
           </MenuItem>
           <MenuItem onClick={handleClose}>Profile</MenuItem>
           <MenuItem onClick={handleClose}>Settings</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       </Box>           
     </Box>

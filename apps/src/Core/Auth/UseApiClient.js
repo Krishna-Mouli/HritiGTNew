@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Config } from '../../Config/Config';
 
 
-const useApiClient = () => {
+const useApiClient = (isSendingForm=false) => {
   
   const defaultOptions = {
     baseURL: `${Config.apiEndpointUrl}`,
@@ -12,6 +12,17 @@ const useApiClient = () => {
     },
   };
 
+  const toSendFilesOptions = {
+    baseURL: `${Config.apiEndpointUrl}`,
+    method: ['get', 'post', 'put', 'delete'],
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }
+
+  if(isSendingForm){
+    return axios.create(toSendFilesOptions);
+  }
   const axiosInstance = axios.create(defaultOptions);
 
   return axiosInstance;

@@ -40,9 +40,10 @@ export const Chat = ()=>{
     const [showSkeletonLoader, setSkeletonLoader] = useState(false);
     const userQuestionRef = useRef(null);
     const apiClient = useApiClient();
+    const apiClientToSendFile = useApiClient(true)
     const dispatch = useDispatch();
     const {messages} = useSelector((state) => state.apps);
-
+    const [files, setFiles] = useState(null);
     useEffect(()=>{
         console.log('messages useeffect', messages)
         userQuestionRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -86,12 +87,26 @@ export const Chat = ()=>{
         const response = await apiClient.post('/api/search/chat', payload);
         return response.data
     }
-    const handleDocUpload = () =>{
-
+    const handleFileChange = (e) =>{
+        console.log(e.target.files)
+        if (e.target.files) {
+            setFiles(e.target.files);
+            uploadDoc()
+        }
     }
 
     const uploadDoc = async()=>{
-        const payload = {}
+    if (files) {
+
+      const formData = new FormData();
+      formData.append('files', files);
+
+      const payload={
+        "form":formData
+      }
+      const res = await apiClientToSendFile.post('',payload)
+
+    }
         
     }
 
@@ -139,7 +154,7 @@ export const Chat = ()=>{
                         >
                         <input
                             type="file"
-                            onChange={(event) => console.log(event.target.files)}
+                            onChange={handleFileChange}
                             style={{display:'none'}}
                             multiple
                         />
