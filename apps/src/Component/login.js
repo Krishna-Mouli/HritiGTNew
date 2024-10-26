@@ -3,7 +3,13 @@ import { Box, ThemeProvider, createTheme, Typography, Button } from '@mui/materi
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import Google from '../Assets/Images/google.svg';
-
+import { loginSuccess } from '../Core/Store/authslice';
+import { useDispatch, useSelector } from 'react-redux';
+import { jwtDecode } from 'jwt-decode';
+import { GoogleLogin } from '@react-oauth/google';
+import { addUser } from '../Core/Store/UserContext';
+import { redirect, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Core/context/AuthContextProvider';
 const theme = createTheme({
   palette: {
     background: {
@@ -43,17 +49,17 @@ const theme = createTheme({
 // };
 
 export const LoginPage = () => {
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-
-  const handleLoginSuccess = (credentialResponse) => {
-    const token = credentialResponse.credential;
-
-    // Decode the JWT token to get user info
-    const userInfo = jwtDecode(token);
-
-    // Dispatch the loginSuccess action to store token and user info in Redux
-    dispatch(
+  // const [user, setUser] = useState(null);
+const [profile, setProfile] = useState(null);
+const user = useSelector((state) => state.userContext.user);
+const token = useSelector((state) => state.auth.token);
+const isAuthenticated = useSelector((state)=>state.auth.isAutheticated)
+const dispatch = useDispatch();
+const navigate = useNavigate()
+// const { isAuthenticated } = useAuth();
+// console.log(user)
+  const storeUserInfo =(userInfo)=>{
+      dispatch(
       loginSuccess({
         token,
         user: {
@@ -63,6 +69,27 @@ export const LoginPage = () => {
         },
       })
     );
+      dispatch(
+            addUser({
+              user: {
+                name: userInfo.name,
+                email: userInfo.email,
+                picture: userInfo.picture,
+            },
+        })
+      );
+  }
+
+  const handleLoginSuccess = (credentialResponse) => {
+    const token = credentialResponse.credential;
+
+    // Decode the JWT token to get user info
+    const userInfo = jwtDecode(token);
+    console.log(userInfo)
+    // Dispatch the loginSuccess action to store token and user info in Redux
+   storeUserInfo(userInfo)
+   localStorage.setItem('token', token);
+   navigate('/layout')
   };
 
   const handleLoginFailure = (error) => {
@@ -70,22 +97,33 @@ export const LoginPage = () => {
   };
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
-    onError: (error) => console.error('Login Failed:', error)
+    onSuccess: (codeResponse) => {handleLoginSuccess(codeResponse)},
+    onError: (error) =>{ handleLoginFailure(error)}
   });
 
   useEffect(() => {
-    if (user?.access_token) {
-      axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-          Accept: 'application/json'
-        }
-      })
-      .then((res) => setProfile(res.data))
-      .catch((err) => console.error(err));
+    let token = localStorage.getItem('token')
+    // // console.log(access_token)
+    // if (access_token) {
+    //   axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
+    //     headers: {
+    //       Authorization: `Bearer ${access_token}`,
+    //       Accept: 'application/json'
+    //     }
+    //   })
+    //   .then((res) => {
+    //     // console.log(res.data)
+    //     storeUserInfo(res.data);
+    //     navigate('/layout');
+    //   })
+    //   .catch((err) => console.error(err));
+    // }
+    if(token){
+    const userInfo = jwtDecode(token)
+    storeUserInfo(userInfo)
+    navigate('/layout')
     }
-  }, [user]);
+  }, [isAuthenticated]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -125,10 +163,11 @@ export const LoginPage = () => {
           onSuccess={handleLoginSuccess}
           onError={handleLoginFailure}
         />
+        {/* <button onClick={login}>Sign in with Google</button> */}
         </Box>
-        {profile && (
+        {user.name && (
           <Typography variant="body1" sx={{ marginTop: 2 }}>
-            Welcome, {profile.name}!
+            Welcome, {user.name}!
           </Typography>
         )}
       </Box>

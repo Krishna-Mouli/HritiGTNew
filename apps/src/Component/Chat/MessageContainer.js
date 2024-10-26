@@ -7,7 +7,11 @@ import { RiRobot3Fill } from "react-icons/ri";
 import jane from '../../Assets/Images/Jane.png';
 import LLM from '../../Assets/Images/LLM.png';
 
+import { useSelector } from "react-redux";
+
 export const MessageContainer = ({isBot, message})=>{
+
+  const user = useSelector((state) => state.userContext.user);
 
     return(
         <Box style={{display:'flex', flexDirection:'column', marginBottom:`${isBot ? "80px" : "20px"}`}}>
@@ -17,7 +21,7 @@ export const MessageContainer = ({isBot, message})=>{
                         isBot ? 
                         <img src={LLM} alt="Profile" style={{ width: 30, height: 30, borderRadius: '50%' }} />
                         :
-                        <img src={jane} alt="Profile" style={{ width: 40, height: 40, borderRadius: '50%' }} />
+                        <img src={user.picture} alt="Profile" style={{ width: 40, height: 40, borderRadius: '50%' }} />
                     }   
                     
                 </Box>
@@ -26,7 +30,7 @@ export const MessageContainer = ({isBot, message})=>{
                         { isBot ?
                             "hriti"
                             :
-                            "jane doe"
+                            user.name
                         }
                     </Typography>
                 </Box>
@@ -40,8 +44,8 @@ export const MessageContainer = ({isBot, message})=>{
                     <TextareaAutosize 
                         readOnly
                         style={{
-                            background:'#111313',
-                            color:'#e8e6e3',
+                            background:'rgb(0 0 0)',
+                            color:'white',
                             width:'100%',
                             resize:'none',
                             border:'none',
