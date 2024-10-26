@@ -3,3 +3,7 @@ openai
 tenacity
 google-cloud-datastore
 google-cloud-storage
+azure-ai-formrecognizer
+azure-core
+tiktoken
+pinecone

@@ -1,0 +1,1 @@
+from .AzureDocumentIntelligence import Extractor
