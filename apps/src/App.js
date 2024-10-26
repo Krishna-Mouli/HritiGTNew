@@ -10,7 +10,7 @@ function App() {
   return (
     <Provider store={Store}>
       <div>        
-        <LoginPage />
+        <Layout />
       </div>
     </Provider>
   );

@@ -15,3 +15,17 @@ class PineConeService:
             )
         except Exception as e:
             print(f"Failed to upsert {e}")
+
+    def get_vectors(self, target_vectors, app_id: str):
+        try:
+            response = self.index.query(
+            namespace = "hriti-default",
+            vector = target_vectors,
+            top_k = 5,
+            include_values = True,
+            include_metadata = True,
+            filter={"appid": {"$eq": app_id}}
+            )
+            return (response.matches)
+        except Exception as e:
+            print(f"Failed to fetch data due to {e}") 

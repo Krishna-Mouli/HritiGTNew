@@ -2,15 +2,17 @@ from typing import List
 import logging
 import tiktoken
 import math
+from ..helpers import StringHelpers
 
 class Chunking:
     def __init__(self):
         self._compl_context_max_tokens = 500
+        self._stringhelpers = StringHelpers()
 
     def chunk(self, content: str) -> List[str]:
         """ This function splits the content into segments uses conventional logic"""
         content_segments = []
-        tokens = self.num_tokens_from_string(content,None) #you can add your encoding type in place of None if need or by default it uses the cl100k_base encoding
+        tokens = self._stringhelpers.num_tokens_from_string(content,None) #you can add your encoding type in place of None if need or by default it uses the cl100k_base encoding
         overlap_token_count = 100 
         tolerance_count = 10   
 
@@ -48,7 +50,7 @@ class Chunking:
                 else:
                     str_accumulator += f"{trimmed_str}" 
                     str_accumulator += "\n" if table_content else ". "
-                    str_token_count = self.num_tokens_from_string(str_accumulator, None)
+                    str_token_count = self._stringhelpers.num_tokens_from_string(str_accumulator, None)
 
                     if str_token_count > segment_max_token_count and not table_content:
                         overlap_str += f"{trimmed_str}. "
@@ -69,11 +71,3 @@ class Chunking:
 
         logging.info(f"SplitContentV2 completed. Content split into {len(content_segments)} segments")
         return content_segments        
-
-    def num_tokens_from_string(self, content: str, encoding_name: str = None) -> int:
-        """Returns the number of tokens in a given text string."""
-        if encoding_name is None:
-            encoding_name = 'cl100k_base'
-        encoding = tiktoken.get_encoding(encoding_name)
-        num_tokens = len(encoding.encode(content))
-        return num_tokens

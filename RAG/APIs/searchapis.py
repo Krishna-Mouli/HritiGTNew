@@ -2,13 +2,17 @@ import logging
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from Data.Models import SearchRequest
+from Services import RAG
 
 router = APIRouter()
 
 @router.post("/apps/{appid}/conversations/{conversationid}")
-async def Search(req: SearchRequest):
+async def Search(appid: str, conversationid: str, req: SearchRequest):
     try:
-        #search logic
-        print('Searching')
+        resp = await RAG().search(convo_id = conversationid, app_id = appid, question = req.searchrequest)
+        return resp
     except Exception as e:
-        print('Error')
+        return JSONResponse(
+            content = f"Error {e}",
+            status_code = 500
+        )
