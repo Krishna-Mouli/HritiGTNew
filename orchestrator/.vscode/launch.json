@@ -12,8 +12,8 @@
             "args": [
                 "orchestrator:app",
                 "--reload",
-                "--host", "127.0.0.1",
-                "--port", "5600"
+                "--host", "0.0.0.0",
+                "--port", "8080"
             ],
             "jinja": true
         }
