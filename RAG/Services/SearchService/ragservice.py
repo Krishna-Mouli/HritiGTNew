@@ -40,7 +40,7 @@ class RAG():
                 "referenceFilePath": entity.filepath
                 }
                 AIresult_array.append(result_object) 
-        return json.dumps(AIresult_array, indent = 2) 
+        return AIresult_array 
 
 
 

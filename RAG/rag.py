@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from APIs import api_router
+import uvicorn
 
 app = FastAPI(title="hriti ochestrator")
 
@@ -17,3 +18,6 @@ app.add_middleware(
 )
 
 app.include_router(api_router)
+
+if __name__ == "__main__":
+    uvicorn.run("rag:app", host = "127.0.0.1", port = 5500)

@@ -10,7 +10,10 @@ router = APIRouter()
 async def Search(appid: str, conversationid: str, req: SearchRequest):
     try:
         resp = await RAG().search(convo_id = conversationid, app_id = appid, question = req.searchrequest)
-        return resp
+        return JSONResponse(
+            content = resp,
+            status_code = 200
+        )
     except Exception as e:
         return JSONResponse(
             content = f"Error {e}",
