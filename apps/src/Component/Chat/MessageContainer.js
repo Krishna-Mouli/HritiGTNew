@@ -21,7 +21,7 @@ export const MessageContainer = ({isBot, message})=>{
                         isBot ? 
                         <img src={LLM} alt="Profile" style={{ width: 30, height: 30, borderRadius: '50%' }} />
                         :
-                        <img src={user.picture} alt="Profile" style={{ width: 40, height: 40, borderRadius: '50%' }} />
+                        <FaUser style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
                     }   
                     
                 </Box>
